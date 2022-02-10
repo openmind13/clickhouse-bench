@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/ClickHouse/clickhouse-go/v2 v2.0.9
 	github.com/google/uuid v1.3.0
+	github.com/mailru/go-clickhouse v1.8.0
 )
 
 require (
