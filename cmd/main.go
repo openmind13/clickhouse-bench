@@ -3,13 +3,14 @@ package main
 import (
 	"log"
 
-	"clickhouse-examples/internal/tester"
+	"clickhouse-bench/internal/config"
+	"clickhouse-bench/internal/tester"
 )
 
 func main() {
 	log.Println("clickhouse examples")
 
-	tester.RunClickhouseMailLib()
+	config.InitConfig()
 
-	// tester.RunClickhouseNative()
+	tester.RunClickhouseNative()
 }

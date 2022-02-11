@@ -3,38 +3,36 @@ package config
 import "flag"
 
 var (
-	clickhouseUrlFlag = flag.String("url", "", "setting up a clickhouse url")
-	databaseFlag      = flag.String("database", "", "setting up a database name")
-	tableFlag         = flag.String("table", "", "setting up a table name")
-	usernameFlag      = flag.String("username", "", "setting up a clickhouse username")
-	passwordFlag      = flag.String("password", "", "setting up a clichouse password")
-	// clickhouseWriteContextTimeoutFlag = flag.String("timeout", "", "clickhouse write context timeout")
-
-	clickMailUrlFlag = flag.String("clickmail", "", "clickhouse mail ru lib url")
+	useClickhouseNativeFlag = flag.Bool("use_native", true, "use clickhouse native")
+	clickhouseNativeUrlFlag = flag.String("clickhouse_native_url", "", "clickhouse native url")
+	clickhouseStdUrlFlag    = flag.String("clickhouse_std_url", "", "clickhouse std url")
+	databaseFlag            = flag.String("database", "", "database name")
+	tableFlag               = flag.String("table", "", "table name")
+	isAsyncFlag             = flag.Bool("use_async", false, "is async ????")
+	workersCountFlag        = flag.Int("workers_count", 1, "worker count (up to 10)")
 )
 
-type Config struct {
-	ClickhouseURL string
-	Database      string
-	Table         string
-	Username      string
-	Password      string
+var Config config
 
-	ClickmailURL string
+type config struct {
+	UseClickhouseNative bool
+	ClickhouseNativeUrl string
+	ClickhouseStdUrl    string
+	Database            string
+	Table               string
+	WorkersCount        int
+	IsAsync             bool
 }
 
-func GetConfig() Config {
+func InitConfig() {
 	flag.Parse()
-
-	c := Config{
-		ClickhouseURL: *clickhouseUrlFlag,
-		Database:      *databaseFlag,
-		Table:         *tableFlag,
-		Username:      *usernameFlag,
-		Password:      *passwordFlag,
-
-		ClickmailURL: *clickMailUrlFlag,
+	Config = config{
+		UseClickhouseNative: *useClickhouseNativeFlag,
+		ClickhouseNativeUrl: *clickhouseNativeUrlFlag,
+		ClickhouseStdUrl:    *clickhouseStdUrlFlag,
+		Database:            *databaseFlag,
+		Table:               *tableFlag,
+		IsAsync:             *isAsyncFlag,
+		WorkersCount:        *workersCountFlag,
 	}
-
-	return c
 }

@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"clickhouse-examples/internal/config"
-	"clickhouse-examples/internal/event"
-	"clickhouse-examples/internal/sqlstatement"
+	"clickhouse-bench/internal/config"
+	"clickhouse-bench/internal/event"
+	"clickhouse-bench/internal/sqlstatement"
 
 	"github.com/ClickHouse/clickhouse-go/v2"
 	"github.com/ClickHouse/clickhouse-go/v2/lib/driver"
@@ -18,29 +18,27 @@ const (
 )
 
 type Clickhouse struct {
-	conn   driver.Conn
-	ctx    context.Context
-	config config.Config
+	conn driver.Conn
+	ctx  context.Context
 }
 
-func NewClickhouse(config config.Config) (*Clickhouse, error) {
+func NewClickhouse() (*Clickhouse, error) {
 	c := &Clickhouse{}
-	c.config = config
 	conn, err := clickhouse.Open(&clickhouse.Options{
-		Addr: []string{c.config.ClickhouseURL},
+		Addr: []string{config.Config.ClickhouseNativeUrl},
 		Auth: clickhouse.Auth{
-			Database: c.config.Database,
-			Username: c.config.Username,
-			Password: c.config.Password,
+			Database: config.Config.Database,
+			// Username: "default",
+			// Password: "default",
 		},
-		MaxOpenConns:    500,
-		MaxIdleConns:    500,
+		MaxOpenConns:    100,
+		MaxIdleConns:    100,
 		ConnMaxLifetime: time.Hour,
 		DialTimeout:     5 * time.Second,
-		Debug:           true,
-		// Compression: &clickhouse.Compression{
-		// 	Method: clickhouse.CompressionLZ4,
-		// },
+		// Debug:           true,
+		Compression: &clickhouse.Compression{
+			Method: clickhouse.CompressionLZ4,
+		},
 	})
 	if err != nil {
 		return nil, err
@@ -53,10 +51,10 @@ func NewClickhouse(config config.Config) (*Clickhouse, error) {
 }
 
 func (c *Clickhouse) PrepareDatabase() error {
-	if err := c.conn.Exec(c.ctx, fmt.Sprintf(sqlstatement.SQL_DROP_TABLE, c.config.Table)); err != nil {
+	if err := c.conn.Exec(c.ctx, fmt.Sprintf(sqlstatement.SQL_DROP_TABLE, config.Config.Table)); err != nil {
 		return err
 	}
-	if err := c.conn.Exec(c.ctx, fmt.Sprintf(sqlstatement.SQL_CREATE_TABLE, c.config.Table)); err != nil {
+	if err := c.conn.Exec(c.ctx, fmt.Sprintf(sqlstatement.SQL_CREATE_TABLE, config.Config.Table)); err != nil {
 		return err
 	}
 	return nil
@@ -72,7 +70,7 @@ func (c *Clickhouse) Write(e event.Event) error {
 			return
 		}
 	}()
-	batch, err := c.conn.PrepareBatch(ctx, fmt.Sprintf("INSERT INTO %s", c.config.Table))
+	batch, err := c.conn.PrepareBatch(ctx, fmt.Sprintf("INSERT INTO %s", config.Config.Table))
 	if err != nil {
 		return err
 	}
@@ -95,7 +93,82 @@ func (c *Clickhouse) WriteAsync(e event.Event) error {
 			return
 		}
 	}()
-	if err := c.conn.AsyncInsert(ctx, fmt.Sprintf(`INSERT INTO %s VALUES (%d, %s, %s, %s)`, c.config.Table, e.Id, e.Type, e.Data, e.Time), true); err != nil {
+	if err := c.conn.AsyncInsert(ctx, fmt.Sprintf(`INSERT INTO test_metrics.test 
+		(
+			Id, 
+			Type, 
+			Data, 
+			Time, 
+			Name, 
+			Provider, 
+			Platform, 
+			Merchant, 
+			Account, 
+			ProjectId, 
+			Fp, 
+			PlayerVersion, 
+			Ip, 
+			RealIp, 
+			Forward, 
+			BitRate, 
+			FramesDecodedRate, 
+			NackCountRate, 
+			PacketsLossPercent,
+			Rtt,
+			DelayStart,
+			PreStart,
+			Ua,
+			BrowserName,
+			BrowserVersion,
+			OsName,
+			OsPlatform,
+			OsVersion,
+			DeviceType,
+			Geohash,
+			AccuracyRadius,
+			Latitude,
+			Longitude,
+			Timezone,
+			CityNameEn,
+			CountryNameEn,
+			ContinentNameEn) VALUES (%d, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %f, %f, %f, %f, %f, %f, %f, %s, %s , %s, %s, %s, %s, %s, %d, %f, %f, %s, %s, %s, %s)`,
+		e.Id,
+		e.Type,
+		e.Data,
+		e.Time,
+		e.Name,
+		e.Provider,
+		e.Platform,
+		e.Merchant,
+		e.Account,
+		e.ProjectId,
+		e.Fp,
+		e.PlayerVersion,
+		e.Ip,
+		e.RealIp,
+		e.Forward,
+		e.BitRate,
+		e.FramesDecodedRate,
+		e.NackCountRate,
+		e.PacketsLossPercent,
+		e.Rtt,
+		e.DelayStart,
+		e.PreStart,
+		e.Ua,
+		e.BrowserName,
+		e.BrowserVersion,
+		e.OsName,
+		e.OsVersion,
+		e.DeviceType,
+		e.Geohash,
+		e.AccuracyRadius,
+		e.Latitude,
+		e.Longitude,
+		e.Timezone,
+		e.CityNameEn,
+		e.CountryNameEn,
+		e.ContinentNameEn,
+	), false); err != nil {
 		return err
 	}
 	return nil

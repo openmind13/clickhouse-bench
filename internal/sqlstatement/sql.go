@@ -12,6 +12,7 @@ var (
 			Type String,
 			Data String,
 			Time DateTime('Etc/UTC'),
+			Name String,
 			Provider String,
 			Platform String,
 			Merchant String,
