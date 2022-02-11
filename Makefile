@@ -13,7 +13,7 @@ native-async:
 						--database=test_metrics \
 						--table=test \
 						--use_async=true \
-						--workers_count=3
+						--workers_count=2
 
 std:
 	go run cmd/main.go \

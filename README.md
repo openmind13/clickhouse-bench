@@ -24,6 +24,6 @@ service clickhouse-server stop
 #### Асинхронная вставка на локальной машине
 
 - 1 поток-воркер: ~ 1800 inserts/sec
-- 2 потока-воркера: ~  inserts/sec
+- 2 потока-воркера: ~ 3500 inserts/sec
 - 3 потока-воркера: ~ 4650 inserts/sec
 - 4 потока-воркера: ~ 6000 inserts/sec
