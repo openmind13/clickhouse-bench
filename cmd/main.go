@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	log.Println("clickhouse examples")
+	log.Println("clickhouse bench")
 
 	config.InitConfig()
 

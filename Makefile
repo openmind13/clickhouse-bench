@@ -13,8 +13,7 @@ native-async:
 						--database=test_metrics \
 						--table=test \
 						--use_async=true \
-						--workers_count=2
+						--workers_count=3
 
 std:
-	go run cmd/main.go \
-						--clickhouse-std-url=
+	go run main.go
