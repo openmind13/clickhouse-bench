@@ -76,7 +76,7 @@ func (w *worker) runAsyncWriting() {
 func benchSyncronousInsert(clicknative *clicknative.Clickhouse) {
 	stopChan := make(chan struct{}, 1)
 	go func() {
-		<-time.After(WORKING_TIME)
+		<-time.After(config.Config.WorkingTime)
 		stopChan <- struct{}{}
 	}()
 
@@ -121,7 +121,7 @@ func benchSyncronousInsert(clicknative *clicknative.Clickhouse) {
 func benchAsyncronousInsert(clicknative *clicknative.Clickhouse) {
 	stopChan := make(chan struct{}, 1)
 	go func() {
-		<-time.After(WORKING_TIME)
+		<-time.After(config.Config.WorkingTime)
 		stopChan <- struct{}{}
 	}()
 

@@ -5,7 +5,9 @@ native-sync:
 						--database=test_metrics \
 						--table=test \
 						--use_async=false \
-						--workers_count=3
+						--workers_count=3 \
+						--working_time_seconds=10 \
+						--engine=MergeTree
 
 native-async:
 	go run cmd/main.go \
@@ -13,7 +15,9 @@ native-async:
 						--database=test_metrics \
 						--table=test \
 						--use_async=true \
-						--workers_count=3
+						--workers_count=3 \
+						--working_time_seconds=10 \
+						--engine=MergeTree
 
 std:
 	go run main.go

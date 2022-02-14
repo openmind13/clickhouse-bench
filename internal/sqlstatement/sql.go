@@ -8,11 +8,14 @@ var (
 	SQL_CREATE_TABLE = `
 		CREATE TABLE IF NOT EXISTS %s
 		(
-			Id UInt32,
-			Type String,
+			ClientId UInt32,
+			EventType String,
 			Data String,
 			Time DateTime('Etc/UTC'),
-			Name String,
+			ClientConnectionTime DateTime('Etc/UTC'),
+			SessionDurationSeconds UInt32,
+			StreamName String,
+			StreamPluginName String,
 			Provider String,
 			Platform String,
 			Merchant String,
@@ -46,7 +49,7 @@ var (
 			CountryNameEn String,
 			ContinentNameEn String
 		)
-		ENGINE = MergeTree
+		ENGINE = %s
 		ORDER BY (Time)
 	`
 )
