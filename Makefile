@@ -1,5 +1,5 @@
 
-native-sync:
+sync:
 	go run cmd/main.go \
 						--clickhouse_native_url=127.0.0.1:9000 \
 						--database=test_metrics \
@@ -9,7 +9,7 @@ native-sync:
 						--working_time_seconds=10 \
 						--engine=MergeTree
 
-native-async:
+async:
 	go run cmd/main.go \
 						--clickhouse_native_url=127.0.0.1:9000 \
 						--database=test_metrics \
@@ -18,6 +18,3 @@ native-async:
 						--workers_count=3 \
 						--working_time_seconds=10 \
 						--engine=MergeTree
-
-std:
-	go run main.go

@@ -13,7 +13,7 @@ var (
 			Data String,
 			Time DateTime('Etc/UTC'),
 			ClientConnectionTime DateTime('Etc/UTC'),
-			SessionDurationSeconds UInt32,
+			SessionDurationSeconds UInt64,
 			StreamName String,
 			StreamPluginName String,
 			Provider String,
